@@ -1,0 +1,36 @@
+:root {
+  /* ===============================
+     BACKGROUND GENERAL (LIGHT)
+     =============================== */
+
+  --bg-page: #f4f3fa;      /* mov foarte deschis */
+  --bg-main: #fbfaff;      /* aproape alb, cald */
+
+  /* ===============================
+     BACKGROUND DARK (BLOG)
+     =============================== */
+
+  --bg-page-dark: #12081f; /* fundal global */
+  --bg-main-dark: #27113D; /* section / card mare */
+  --bg-card-dark: #1c0d2e;
+
+  /* ===============================
+     TEXT
+     =============================== */
+
+  --text-main: #fffade;
+  --text-muted: rgba(255,250,222,0.7);
+
+  /* ===============================
+     TAGS
+     =============================== */
+
+  --tag-bg: #2f1a4a;
+  --tag-border: rgba(255,250,222,0.12);
+
+  /* ===============================
+     BACKGROUND LINES / CIRCLES
+     =============================== */
+
+  --circle-stroke: rgba(214, 200, 255, 0.35);
+}

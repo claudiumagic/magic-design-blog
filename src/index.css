@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* background mare */
+  --bg-page: #f4f3fa;
+
+  /* surface */
+  --bg-main: #fbfaff;
+
+  /* umbre */
+  --main-shadow: 0 25px 60px rgba(42,18,74,0.08);
+
+  /* cercuri */
+  --circle-stroke: #2a124a;
+
+  --title-primary: #2a1b3d;
+  --title-hover: #3a235c;
+}
+
+/* ARTICLE SURFACE – varianta corectă */
+
+.article-surface {
+  position: relative;
+  z-index: 10;
+
+  margin: 4rem auto;
+  padding: 3rem 2.5rem;
+
+  background: rgba(251, 250, 255, 0.15);
+
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+
+  border-radius: 24px;
+
+  /* 🔥 rama de sticlă corectă */
+  box-shadow:
+    0 18px 40px rgba(42,18,74,0.06),
+    inset 0 0 0 1px rgba(255,255,255,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.45);
+}
+
+
+
+
+.article-surface::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    radial-gradient(
+      circle at 15% 5%,
+      rgba(255,255,255,0.35),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(255,255,255,0.2),
+      transparent 60%
+    );
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.article-surface > * {
+  position: relative;
+  z-index: 1;
+}
+.article-card::after {
+  transition:
+    width 0.35s cubic-bezier(.22,1,.36,1),
+    left 0.35s cubic-bezier(.22,1,.36,1);
+}
+
+
+.article-card:hover::after {
+  width: 100%;
+  left: 0;
+}
+
+
+
+/*  papirus reinterpretat */
+.layout-root {
+  position: relative;
+  min-height: 100vh; /* 🔥 CHEIA */
+  background: var(--bg-page);
+  overflow: hidden;
+}
+
+
+
+
+
+/* Overlay-ul de noise */
+
+.layout-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: url("/noise.png");
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  z-index: 0;
+}
+
+/* Basis move */
+
+.bg-circles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+
+.main-content {
+  background-color: var(--bg-main-dark);
+  border-radius: 1.75rem;
+  position: relative;
+  z-index: 2;
+}
+
+
+
+
+
+@keyframes float-circles {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-80px, -60px);
+  }
+}
+
+/* */
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeInUp 0.45s ease-out both;
+}
+
+
+
+
+
+
+
+
+
+
+

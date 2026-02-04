@@ -1,0 +1,14 @@
+/* .blog-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+  transition: transform .3s;
+}
+.blog-card:hover {
+  transform: translateY(-6px);
+}
+.blog-card img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+} */

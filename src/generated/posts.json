@@ -1,0 +1,10 @@
+[
+  {
+    "title": "Primul meu articol",
+    "date": "2025-01-18",
+    "description": "De ce am început acest blog",
+    "slug": "primul-articol",
+    "content": "\r\n\r\n# Salut 👋\r\n\r\nAici o să scriu despre parcursul meu, ce învăț, ce construiesc.\r\n\r\n## Ce urmează\r\n\r\n- proiecte\r\n- greșeli\r\n- lecții\r\n",
+    "url": "http://localhost:5000/personal/primul-articol"
+  }
+]
