@@ -175,17 +175,20 @@ app.get("/api/health", async (_, res) => {
    POSTS
    ========================================================= */
 
-app.get("/api/posts", async (_, res) => {
+app.get("/api/posts", async (req, res) => {
   try {
-    const [rows] = await db.query(
-      "SELECT * FROM posts ORDER BY date DESC"
-    );
+    const [rows] = await db.query("SELECT * FROM posts ORDER BY date DESC");
     res.json(rows);
   } catch (err) {
-    console.error("❌ Posts error:", err);
-    res.status(500).json({ error: "Eroare server posts" });
+    console.error("❌ POSTS DB ERROR:", err);
+    res.status(500).json({
+      error: "Eroare server posts",
+      details: err.message,
+      code: err.code,
+    });
   }
 });
+
 
 
 // POST slug
