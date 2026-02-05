@@ -3,6 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { layout, card, pagination } from "@/assets/style";
 import RatingStars from "@/components/RatingStars";
+import BlogSkeleton from "@/components/skeletons/BlogSkeleton";
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
 const POSTS_PER_PAGE = 6;
@@ -17,8 +18,12 @@ export default function PersonalBlog() {
   const start = (page - 1) * POSTS_PER_PAGE;
   const visiblePosts = posts.slice(start, start + POSTS_PER_PAGE);
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-   const getRating = slug =>
-    Number(localStorage.getItem(`rating-${slug}`)) || 0;
+  const getRating = (slug) =>
+  Number(localStorage.getItem(`rating-${slug}`)) || 0;
+ 
+
+  
+  /* ================= FETCH POSTS ================= */
 
   useEffect(() => {
     fetch("http://localhost:5000/api/posts")
@@ -28,13 +33,35 @@ export default function PersonalBlog() {
   }, []);
 
   if (loading) {
-    return <p className="text-center py-20">Se încarcă…</p>;
-  }
+  return (
+    <section className={layout.pageSection}>
+      <BlogSkeleton count={6} />
+    </section>
+  );
+}
+
+ const lcpImage =
+  visiblePosts.length > 0
+    ? (visiblePosts[0].cover
+        ? `http://localhost:5000${visiblePosts[0].cover}`
+        : DEFAULT_COVER)
+    : null;
+
 
   return (
+    
     <section className={layout.pageSection}>
       {/* SEO */}
       <Helmet>
+        
+        {lcpImage && (
+          <link
+            rel="preload"
+            as="image"
+            href={lcpImage}
+            fetchpriority="high"
+          />
+        )}
         <title>Personal Blog</title>
         <meta
           name="description"
@@ -50,7 +77,7 @@ export default function PersonalBlog() {
         </header>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {visiblePosts.map((post) => (
+          {visiblePosts.map((post, index) => (
             <Link
               key={post.slug}
               to={`/personal/${post.slug}?page=${page}`}
@@ -71,6 +98,10 @@ export default function PersonalBlog() {
                   }
                   alt={post.title}
                   className={card.image}
+                  loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  fetchpriority={index === 0 ? "high" : "auto"}
+                  onError={(e) => (e.currentTarget.src = DEFAULT_COVER)}
                 />
 
                 <div className={card.body}>
@@ -84,16 +115,20 @@ export default function PersonalBlog() {
                   </p>
                   
                 </div>
-                <div className="mt-auto">
-                  {getRating(post.slug) > 0 && (
-                    <RatingStars
-                      value={getRating(post.slug)}
-                      readOnly
-                      size="text-sm"
-                    />
+                <div className="mt-auto min-h-[28px]">
+                  <RatingStars
+                    value={getRating(post.slug)}
+                    readOnly
+                    size="text-sm"
+                    className="opacity-25"
+                  />
+                  {getRating(post.slug) === 0 && (
+                    <p className="text-[11px] opacity-40 mt-1">
+                      Articol încă neevaluat
+                    </p>
                   )}
-
                 </div>
+
               </article>
             </Link>
           ))}

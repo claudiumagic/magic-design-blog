@@ -5,6 +5,8 @@ import axios from "axios";
 import RatingStars from "@/components/RatingStars";
 import { buildSeo } from "@/utils/seo";
 import Comments from "@/components/Comments";
+import ArticleSkeleton from "@/components/skeletons/ArticleSkeleton";
+
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
 
@@ -40,8 +42,9 @@ export default function Article({ isAdmin }) {
   }, [slug]);
 
   if (!article) {
-    return <p className="text-center py-20">Articolul nu a fost găsit.</p>;
+    return <ArticleSkeleton />;
   }
+
 
   const isExternal = Boolean(article.external);
 
@@ -73,6 +76,12 @@ export default function Article({ isAdmin }) {
   return (
     <>
       <Helmet>
+         <link
+          rel="preload"
+          as="image"
+          href={seo.image}
+          fetchpriority="high"
+        />
         <title>{seo.title}</title>
         <meta name="description" content={seo.description} />
         <link rel="canonical" href={article.external ? article.link : article.url} />
@@ -86,6 +95,10 @@ export default function Article({ isAdmin }) {
         )}
 
         {isExternal && <meta name="robots" content="noindex,follow" />}
+         <link
+          rel="canonical"
+          href={article.external ? article.link : article.url}
+        />
       </Helmet>
       {isExternal && (
         <Helmet>
@@ -156,6 +169,9 @@ export default function Article({ isAdmin }) {
             src={seo.image}
             alt={article.title}
             className="w-full h-80 object-cover rounded-2xl pointer-events-none"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
             onError={(e) => (e.currentTarget.src = DEFAULT_COVER)}
           />
 

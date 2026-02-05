@@ -3,6 +3,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
 import RatingStars from "@/components/RatingStars";
+import { layout } from "@/assets/style";
+import BlogSkeleton from "@/components/skeletons/BlogSkeleton";
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
 const POSTS_PER_PAGE = 6;
@@ -12,12 +14,22 @@ export default function Blog() {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get("page")) || 1;
+ 
+
 
   useEffect(() => {
     axios.get("http://localhost:5000/api/rss")
       .then(res => setArticles(res.data || []))
       .finally(() => setLoading(false));
   }, []);
+  if (loading) {
+    return (
+      <section className={layout.pageSection}>
+        <BlogSkeleton />
+      </section>
+    );
+  }
+
 
   const start = (page - 1) * POSTS_PER_PAGE;
   const visible = articles.slice(start, start + POSTS_PER_PAGE);
@@ -25,10 +37,22 @@ export default function Blog() {
 
   const getRating = slug =>
     Number(localStorage.getItem(`rating-${slug}`)) || 0;
+  const lcpImage =
+    visible.length > 0
+    ? visible[0].cover || DEFAULT_COVER
+    : null;
 
   return (
     <>
       <Helmet>
+        {lcpImage && (
+          <link
+            rel="preload"
+            as="image"
+            href={lcpImage}
+            fetchpriority="high"
+          />
+        )}
         <title>UI / UX Blog – Inspirație & Resurse</title>
         <meta
           name="description"
@@ -45,11 +69,12 @@ export default function Blog() {
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {loading
             ? Array.from({ length: POSTS_PER_PAGE }).map((_, i) => (
-                <div key={i} className="h-[420px] rounded-2xl bg-gray-100 animate-pulse" />
+                <div key={art.slug} className="h-[420px] rounded-2xl bg-gray-100 animate-pulse" />
               ))
-            : visible.map((art, i) => (
+            : 
+            visible.map((art ,index) => (
                 <Link
-                  key={`${art.slug}-${i}`}
+                  key={`${art.slug}`}
                   to={`/article/${art.slug}`}
                   state={{ article: art, allArticles: visible }}
                 >
@@ -68,6 +93,9 @@ export default function Blog() {
                     <img
                       src={art.cover || DEFAULT_COVER}
                       className="h-48 w-full object-cover"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                      fetchpriority={index === 0 ? "high" : "auto"}
                     />
 
                     <div className="p-6 flex flex-col flex-1">
