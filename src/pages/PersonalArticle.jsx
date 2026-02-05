@@ -6,6 +6,9 @@ import RatingStars from "@/components/RatingStars";
 import { buildSeo } from "@/utils/seo";
 import Comments from "@/components/Comments";
 import ArticleSkeleton from "@/components/skeletons/ArticleSkeleton";
+import { resolveImage } from "@/utils/media";
+import API_URL from "@/config/api";
+
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
 
@@ -30,7 +33,7 @@ export default function PersonalArticle({ isAdmin }) {
       window.scrollTo({ top: 0 });
 
       axios
-        .get(`http://localhost:5000/api/posts/${slug}`)
+        .get(`${API_URL}/posts/${slug}`)
         .then(res => setArticle(res.data))
         .catch(() => setArticle(null));
     }, [slug]);
@@ -51,9 +54,7 @@ export default function PersonalArticle({ isAdmin }) {
     description:
       article.excerpt ||
       article.content?.replace(/<[^>]+>/g, "").slice(0, 160),
-    image: article.cover
-      ? `http://localhost:5000${article.cover}`
-      : DEFAULT_COVER,
+      image: resolveImage(article.cover, DEFAULT_COVER),
     url: `${window.location.origin}/personal/${article.slug}`,
   });
 
@@ -205,16 +206,21 @@ export default function PersonalArticle({ isAdmin }) {
         <div className="mb-14">
           <p className="font-semibold mb-2">Rating articol:</p>
 
+          <div className="mt-auto">
+            <RatingStars
+              value={getRating(post.slug)}
+              readOnly
+              size="text-sm"
+              className={getRating(post.slug) === 0 ? "opacity-30" : ""}
+            />
 
+            {getRating(post.slug) === 0 && (
+              <p className="text-[10px] opacity-30 mt-1">
+                Fii primul care evaluează
+              </p>
+            )}
+          </div>
 
-<RatingStars
-  value={rating}
-  onRate={(v) => {
-    setRating(v);
-    localStorage.setItem(`rating-${slug}`, v);
-  }}
-  size="text-xl"
-/>
 
 
         </div>

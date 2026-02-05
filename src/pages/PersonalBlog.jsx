@@ -4,6 +4,8 @@ import { Helmet } from "react-helmet-async";
 import { layout, card, pagination } from "@/assets/style";
 import RatingStars from "@/components/RatingStars";
 import BlogSkeleton from "@/components/skeletons/BlogSkeleton";
+import API_URL from "@/config/api";
+import { resolveImage } from "@/utils/media";
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
 const POSTS_PER_PAGE = 6;
@@ -26,11 +28,16 @@ export default function PersonalBlog() {
   /* ================= FETCH POSTS ================= */
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/posts")
-      .then((res) => res.json())
-      .then((data) => setPosts(Array.isArray(data) ? data : []))
+    fetch(`${API_URL}/posts`)
+      .then(res => {
+        if (!res.ok) throw new Error("API down");
+        return res.json();
+      })
+      .then(data => setPosts(data))
+      .catch(() => setPosts([]))
       .finally(() => setLoading(false));
   }, []);
+
 
   if (loading) {
   return (
@@ -42,9 +49,7 @@ export default function PersonalBlog() {
 
  const lcpImage =
   visiblePosts.length > 0
-    ? (visiblePosts[0].cover
-        ? `http://localhost:5000${visiblePosts[0].cover}`
-        : DEFAULT_COVER)
+    ? resolveImage(visiblePosts[0].cover, DEFAULT_COVER)
     : null;
 
 
@@ -53,22 +58,17 @@ export default function PersonalBlog() {
     <section className={layout.pageSection}>
       {/* SEO */}
       <Helmet>
-        
-        {lcpImage && (
-          <link
-            rel="preload"
-            as="image"
-            href={lcpImage}
-            fetchpriority="high"
-          />
-        )}
         <title>Personal Blog</title>
         <meta
           name="description"
           content="Articole personale despre design, UX, dezvoltare și gânduri proprii."
         />
-
+        <link
+          rel="canonical"
+          href={`${window.location.origin}/personal?page=${page}`}
+        />
       </Helmet>
+
 
       <div className="max-w-6xl mx-auto">
         <header className="mb-12 text-center">
@@ -91,11 +91,7 @@ export default function PersonalBlog() {
             >
               <article className={card.wrapper}>
                 <img
-                  src={
-                    post.cover
-                      ? `http://localhost:5000${post.cover}`
-                      : DEFAULT_COVER
-                  }
+                  src={resolveImage(post.cover, DEFAULT_COVER)}
                   alt={post.title}
                   className={card.image}
                   loading={index === 0 ? "eager" : "lazy"}

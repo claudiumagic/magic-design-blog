@@ -6,6 +6,8 @@ import RatingStars from "@/components/RatingStars";
 import { buildSeo } from "@/utils/seo";
 import Comments from "@/components/Comments";
 import ArticleSkeleton from "@/components/skeletons/ArticleSkeleton";
+import { resolveImage } from "@/utils/media";
+import API_URL from "@/config/api";
 
 
 const DEFAULT_COVER = "/images/default-cover.jpg";
@@ -31,7 +33,7 @@ export default function Article({ isAdmin }) {
     }
 
     axios
-      .get(`http://localhost:5000/api/posts/${slug}`)
+      .get(`${API_URL}/posts/${slug}`)
       .then(res => setArticle(res.data))
       .catch(() => setArticle(null));
   }, [slug, location.state]);
@@ -54,12 +56,8 @@ export default function Article({ isAdmin }) {
     description:
       article.excerpt ||
       article.content?.replace(/<[^>]+>/g, "").slice(0, 160),
-    image: article.cover?.startsWith("http")
-      ? article.cover
-      : article.cover
-      ? `http://localhost:5000${article.cover}`
-      : DEFAULT_COVER,
-    url: `${window.location.origin}/article/${article.slug}`,
+      image: resolveImage(article.cover, DEFAULT_COVER),
+      url: `${window.location.origin}/article/${article.slug}`,
   });
 
   /* ================= PREV / NEXT ================= */
@@ -84,7 +82,7 @@ export default function Article({ isAdmin }) {
         />
         <title>{seo.title}</title>
         <meta name="description" content={seo.description} />
-        <link rel="canonical" href={article.external ? article.link : article.url} />
+        <link rel="canonical" href={seo.url} />
         <meta property="og:title" content={seo.title} />
         <meta property="og:description" content={seo.description} />
         <meta property="og:image" content={seo.image} />
@@ -93,12 +91,8 @@ export default function Article({ isAdmin }) {
         {isExternal && (
           <meta name="content-origin" content="external" />
         )}
-
         {isExternal && <meta name="robots" content="noindex,follow" />}
-         <link
-          rel="canonical"
-          href={article.external ? article.link : article.url}
-        />
+    
       </Helmet>
       {isExternal && (
         <Helmet>

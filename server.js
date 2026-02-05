@@ -21,7 +21,7 @@ import {
    ========================================================= */
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 const RSS_TIMEOUT = 8000;            // 8s per feed
 const RSS_LIMIT_PER_FEED = 10;       // max articole / feed
@@ -33,6 +33,8 @@ const parser = new Parser({
 
 const externalPostsCache = new Map();
 const RSS_TTL = 24 * 60 * 60 * 1000; // 24h
+
+
 
 /* =========================================================
    Token
@@ -160,11 +162,17 @@ app.get("/api/health", async (_, res) => {
    ========================================================= */
 
 app.get("/api/posts", async (_, res) => {
-  const [rows] = await db.query(
-    "SELECT * FROM posts ORDER BY date DESC"
-  );
-  res.json(rows);
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM posts ORDER BY date DESC"
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error("❌ Posts error:", err);
+    res.status(500).json({ error: "Eroare server posts" });
+  }
 });
+
 
 // POST slug
 app.get('/api/posts/:slug', async (req, res) => {
@@ -577,6 +585,8 @@ app.post(
    START
    ========================================================= */
 
+
 app.listen(PORT, () => {
-  console.log(`✅ Server running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
+
