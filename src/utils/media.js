@@ -1,7 +1,16 @@
-const ASSETS_URL = import.meta.env.VITE_ASSETS_URL;
+import API_URL from "@/config/api";
 
-export function resolveImage(src, fallback) {
-  if (!src) return fallback;
-  if (src.startsWith("http")) return src;
-  return `${ASSETS_URL}${src}`;
+export function resolveImage(image, fallback = "/images/default-cover.jpg") {
+  if (!image) return fallback;
+
+  // dacă e deja https (extern)
+  if (image.startsWith("https://")) return image;
+
+  // dacă e http extern → forțăm https
+  if (image.startsWith("http://")) {
+    return image.replace(/^http:\/\//, "https://");
+  }
+
+  // dacă e path local (/uploads/...)
+  return `${API_URL}${image}`;
 }

@@ -74,6 +74,9 @@ export default function Blog() {
     <>
       {/* ================= SEO ================= */}
       <Helmet>
+        <link rel="preconnect" href="https://files.smashing.media" />
+        <link rel="dns-prefetch" href="https://files.smashing.media" />
+
         {lcpImage && (
           <link
             rel="preload"
@@ -82,6 +85,7 @@ export default function Blog() {
             fetchpriority="high"
           />
         )}
+
         <title>UI / UX Blog – Inspirație & Resurse</title>
         <meta
           name="description"
@@ -92,6 +96,8 @@ export default function Blog() {
           href={`${window.location.origin}/?page=${page}`}
         />
       </Helmet>
+
+
 
       <section className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold mb-10 text-center">

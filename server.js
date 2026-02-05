@@ -79,12 +79,26 @@ function requireAdmin(req, res, next) {
   }
 }
 
+// temporar
+app.get("/health", (req, res) => {
+  res.json({ ok: true });
+});
+
+
 /* =========================================================
    MIDDLEWARE
    ========================================================= */
 
-app.use(cors());
-app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "https://blog.magic-design.ro",
+      "http://localhost:5173",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
+
 
 app.use(
   "/uploads",

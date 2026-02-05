@@ -74,26 +74,24 @@ export default function Article({ isAdmin }) {
   return (
     <>
       <Helmet>
-         <link
+        <link rel="preconnect" href="https://files.smashing.media" />
+        <link rel="dns-prefetch" href="https://files.smashing.media" />
+
+        <link
           rel="preload"
           as="image"
           href={seo.image}
           fetchpriority="high"
         />
+
         <title>{seo.title}</title>
         <meta name="description" content={seo.description} />
-        <link rel="canonical" href={seo.url} />
-        <meta property="og:title" content={seo.title} />
-        <meta property="og:description" content={seo.description} />
-        <meta property="og:image" content={seo.image} />
-        <meta property="og:type" content="article" />
-        <meta property="og:url" content={seo.url} />
-        {isExternal && (
-          <meta name="content-origin" content="external" />
-        )}
-        {isExternal && <meta name="robots" content="noindex,follow" />}
-    
+        <link
+          rel="canonical"
+          href={article.external ? article.link : article.url}
+        />
       </Helmet>
+
       {isExternal && (
         <Helmet>
           <script type="application/ld+json">
