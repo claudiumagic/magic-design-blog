@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 import slugify from "slugify";
 import Parser from "rss-parser";
-import { db } from "./db.js";
+import db from "./db.js";
 import rateLimit from "./middlewares/rateLimit.js";
 import requireGdprConsent from "./middlewares/requireGdprConsent.js";
 import {
