@@ -14,6 +14,9 @@ import {
   sanitizeWebsite,
 } from "./src/utils/sanitizeInput.js";
 
+console.log("DB HOST:", process.env.DB_HOST);
+console.log("DB PORT:", process.env.DB_PORT);
+console.log("DB NAME:", process.env.DB_NAME);
 
 
 /* =========================================================
