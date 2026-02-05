@@ -180,17 +180,14 @@ app.get("/api/health", async (_, res) => {
 
 app.get("/api/posts", async (req, res) => {
   try {
-    const [rows] = await db.query("SELECT * FROM posts ORDER BY date DESC");
+    const [rows] = await db.query("SELECT * FROM posts");
     res.json(rows);
   } catch (err) {
-    console.error("❌ POSTS DB ERROR:", err);
-    res.status(500).json({
-      error: "Eroare server posts",
-      details: err.message,
-      code: err.code,
-    });
+    console.error("Posts error:", err);
+    res.status(500).json({ error: "Eroare server posts" });
   }
 });
+
 
 
 
